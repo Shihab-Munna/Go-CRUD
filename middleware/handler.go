@@ -4,61 +4,20 @@ import (
 	"database/sql"
 	"encoding/json" // package to encode and decode the json into struct and vice versa
 	"fmt"
+	"github.com/gorilla/mux" // used to get the params from the route
+	"go-postgres/config"
 	"go-postgres/models" // models package where User schema is defined
 	"log"
 	"net/http" // used to access the request and response object of the api   // used to read the environment variable
 	"strconv"  // package used to covert string into int type
 
-	"github.com/gorilla/mux" // used to get the params from the route
-
-	"github.com/joho/godotenv" // package used to read the .env file
-	_ "github.com/lib/pq"      // postgres golang driver
+	_ "github.com/lib/pq" // postgres golang driver
 )
 
 // response format
 type response struct {
 	ID      int64  `json:"id,omitempty"`
 	Message string `json:"message,omitempty"`
-}
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "reshop_live"
-	password = "737467"
-	dbname   = "go_crud"
-)
-
-// create connection with postgres db
-func createConnection() *sql.DB {
-
-	// load .env file
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	// Open the connection
-	db, err := sql.Open("postgres", psqlInfo)
-
-	if err != nil {
-		panic(err)
-	}
-
-	// check the connection
-	err = db.Ping()
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Successfully connected!")
-	// return the connection
-	return db
 }
 
 // CreateUser create a user in the postgres db
@@ -216,7 +175,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 func insertUser(user models.User) int64 {
 
 	// create the postgres db connection
-	db := createConnection()
+	db := config.CreateConnection()
 
 	// close the db connection
 	defer db.Close()
@@ -245,7 +204,7 @@ func insertUser(user models.User) int64 {
 // get one user from the DB by its userid
 func getUser(id int64) (models.User, error) {
 	// create the postgres db connection
-	db := createConnection()
+	db := config.CreateConnection()
 
 	// close the db connection
 	defer db.Close()
@@ -279,7 +238,7 @@ func getUser(id int64) (models.User, error) {
 // get one user from the DB by its userid
 func getAllUsers() ([]models.User, error) {
 	// create the postgres db connection
-	db := createConnection()
+	db := config.CreateConnection()
 
 	// close the db connection
 	defer db.Close()
@@ -323,7 +282,7 @@ func getAllUsers() ([]models.User, error) {
 func updateUser(id int64, user models.User) int64 {
 
 	// create the postgres db connection
-	db := createConnection()
+	db := config.CreateConnection()
 
 	// close the db connection
 	defer db.Close()
@@ -354,7 +313,7 @@ func updateUser(id int64, user models.User) int64 {
 func deleteUser(id int64) int64 {
 
 	// create the postgres db connection
-	db := createConnection()
+	db := config.CreateConnection()
 
 	// close the db connection
 	defer db.Close()
