@@ -8,8 +8,9 @@ import (
 	"go-postgres/config"
 	"go-postgres/models" // models package where User schema is defined
 	"log"
-	"net/http" // used to access the request and response object of the api   // used to read the environment variable
-	"strconv"  // package used to covert string into int type
+	"net/http" // used to access the request and response object of the api
+	// used to read the environment variable
+	"strconv" // package used to covert string into int type
 
 	_ "github.com/lib/pq" // postgres golang driver
 )
@@ -79,7 +80,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 // GetAllUser will return all the users
 func GetAllUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	// w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	// get all the users in the db
 	users, err := getAllUsers()

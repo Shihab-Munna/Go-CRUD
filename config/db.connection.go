@@ -8,23 +8,21 @@ import (
 	"os"
 )
 
-var (
-	host     = os.Getenv("DB_HOST")
-	port     = os.Getenv("DB_PORT")
-	user     = os.Getenv("DB_USERNAME")
-	password = os.Getenv("DB_PASSWORD")
-	dbname   = os.Getenv("DB_NAME")
-)
-
 // CreateConnection with postgres db
 func CreateConnection() *sql.DB {
-
 	// load .env file
 	err := godotenv.Load(".env")
-
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
+	var (
+		host     = os.Getenv("APP_DB_HOST")
+		port     = os.Getenv("APP_DB_PORT")
+		user     = os.Getenv("APP_DB_USERNAME")
+		password = os.Getenv("APP_DB_PASSWORD")
+		dbname   = os.Getenv("APP_DB_NAME")
+	)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
